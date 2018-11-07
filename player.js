@@ -4,7 +4,7 @@ import Creature from "./creature.js";
 
 export default class Player extends Creature {
 	constructor({ x, y, bindings, color }) {
-		super({ x: x, y: y });
+		super({ x, y });
 		this.speed = {
 			current: 5,
 			min: 1,

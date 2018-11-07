@@ -4,7 +4,7 @@ import Projectile from "./projectile.js";
 
 export default class RangedWeapon extends Weapon {
 	constructor({ name, cost, damage, speed, projectileSize, projectileSpeed }) {
-		super({ name: name, cost: cost, damage: damage, speed: speed });
+		super({ name, cost, damage, speed });
 		this.damage = damage;
 		this.speed = speed;
 		this.projectileSize = projectileSize;

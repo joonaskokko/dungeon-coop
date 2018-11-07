@@ -3,7 +3,7 @@ import Creature from "./creature.js";
 
 export default class Enemy extends Creature {
 	constructor({ x, y }) {
-		super({ x: x, y: y });
+		super({ x, y });
 	}
 
 	move() {

@@ -4,7 +4,7 @@ import Effecter from "./effecter.js";
 
 export default class MeleeWeapon extends Weapon {
 	constructor({ name, cost, damage, speed, size, owner }) {
-		super({ name: name, cost: cost });
+		super({ name, cost });
 		this.damage = damage;
 		this.speed = speed;
 		this.size = size;
