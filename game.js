@@ -31,8 +31,6 @@ state.canvas.width = 1000;
 state.canvas.height = 1000;
 state.context = state.canvas.getContext("2d");
 
-state.room = new Room();
-
 const bindings = {
 	/*
 	UP = 38
@@ -66,50 +64,50 @@ const bindings = {
 	}
 };
 
-state.player = new Player({ x: 220, y: 220, bindings: bindings[1], color: "blue" });
+state.objects = {};
+state.objects.room = new Room();
 
-state.player.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, speed: 50, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
-
-state.player.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, speed: 20, size: 50}), weaponSlotNumber: 1 });
-
-state.player2 = new Player({ x: 420, y: 420, bindings: bindings[2], color: "orange" });
-
-state.player2.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, speed: 20, size: 50}), weaponSlotNumber: 1 });
-
-state.player2.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, speed: 50, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
+state.objects.players = new Set();
 
 
-state.objects.add(state.room);
-/*
-state.objects.add(new Block(50, 50, 250, 200));
-state.objects.add(new Block(400, 0, 150, 100));
-state.objects.add(new Block(200, 250, 100, 400));
 
-state.objects.add(new Enemy(800, 800, 50, "orange"));
-state.objects.add(new Enemy(600, 600, 50, "orange"));
-*/
+let player1 = new Player({ x: 220, y: 220, bindings: bindings[1], color: "blue" });
+let player2 = new Player({ x: 420, y: 420, bindings: bindings[2], color: "orange" });
 
-//state.objects.add(new Projectile(500, 500, "up", 1, 10, null));
-state.objects.add(state.player);
-state.objects.add(state.player2);
+player1.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, speed: 50, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
+player1.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, speed: 20, size: 50}), weaponSlotNumber: 1 });
+
+player2.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, speed: 20, size: 50}), weaponSlotNumber: 1 });
+player2.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, speed: 50, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
+
+state.objects.players.add(player1);
+state.objects.players.add(player2);
+
+state.objects.projectiles = new Set();
 
 state.running = true;
 
 let hooks = [ "clean", "move", "attack", "collide", "update", "prerender", "render" ];
 
-let invoke = function(function_name, objects) {
-	for (let item of objects) {
-		if (typeof item[function_name] === "function") {
-			item[function_name].call(item);
-		}
-	} 
+let invoke = function(function_name, object) {
+	if (typeof object[function_name] === "function") {
+		object[function_name].call(object);
+	}
 };
 
 let step = function () {
 	if (state.running) {
-		hooks.forEach(hook =>
-			invoke(hook, state.objects)
-		);
+		hooks.forEach(function(hook) {
+			invoke(hook, state.objects.room);
+			
+			for (let player of state.objects.players) {
+				invoke(hook, player);
+			};
+			
+			for (let projectile of state.objects.projectiles) {
+				invoke(hook, projectile);
+			}
+		});
 		
 		animate(step);
 		//setTimeout(function() { animate(step) }, 16);

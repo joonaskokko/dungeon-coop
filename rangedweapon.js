@@ -34,7 +34,7 @@ export default class RangedWeapon extends Weapon {
 			spawnCoordinates.y = this.owner.location.y + this.owner.size;
 		}
 
-		state.objects.add(new Projectile({ startx: spawnCoordinates.x, starty: spawnCoordinates.y, direction: this.owner.direction.current, speed: this.projectileSpeed, size: this.projectileSize, owner: this }));
+		state.objects.projectiles.add(new Projectile({ startx: spawnCoordinates.x, starty: spawnCoordinates.y, direction: this.owner.direction.current, speed: this.projectileSpeed, size: this.projectileSize, owner: this }));
 	}
 	
 	render() {

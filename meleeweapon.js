@@ -34,6 +34,6 @@ export default class MeleeWeapon extends Weapon {
 			spawnCoordinates.y = this.owner.location.y + this.owner.size;
 		}
 
-		state.objects.add(new Effecter({damage: this.damage, size: this.size, duration: 10, x: spawnCoordinates.x, y: spawnCoordinates.y }));
+		state.objects.projectiles.add(new Effecter({damage: this.damage, size: this.size, duration: 10, x: spawnCoordinates.x, y: spawnCoordinates.y }));
 	}
 }

@@ -65,6 +65,12 @@ export default class Creature extends Thing {
 		}
 	}
 	
+	clean() {
+		if (this.status == false) {
+			state.objects.creatures.delete(this);
+		}
+	}
+	
 	render() {
 		state.context.fillStyle = this.color;
 		state.context.fillRect(this.location.x, this.location.y, this.size, this.size);

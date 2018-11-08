@@ -69,12 +69,6 @@ export default class Thing {
 		this.direction.target = null;
 	}
 	
-	clean() {
-		if (this.status == false) {
-			state.objects.delete(this);
-		}
-	}
-	
 	destroy() {
 		this.status = false;
 	}
