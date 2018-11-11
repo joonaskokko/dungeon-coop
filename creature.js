@@ -7,21 +7,9 @@ export default class Creature extends Thing {
 		
 		this.size = 50;
 		this.color = "green";
-		this.location = {
-			x: x,
-			y: y,
-			targetx: null,
-			targety: null,
-			previousx: null,
-			previousy: null
-		};
 		
-		this.direction = {
-			current: "up",
-			target: null
-		};
-		
-		this.status = "alive";
+		this.location.current = { x, y };
+		this.direction.current = "up";
 		
 		this.health = {
 			current: 1,
@@ -29,9 +17,9 @@ export default class Creature extends Thing {
 		};
 		
 		this.speed = {
-			current: 1,
+			current: 5,
 			min: 1,
-			max: 1
+			max: 10
 		};
 		
 		this.weaponSlots = {
@@ -44,35 +32,42 @@ export default class Creature extends Thing {
 				cooldown: 0
 			}
 		};
-		
-		this.inventory = new Set();
 	}
+	
+	/*
+	get inventory() { return this.inventory; }
+	
+	set equipWeapon(weaponSlotNumber, item) { this.weaponSlots[weaponSlotNumber].item = item; }
+	get weaponSlots() { return this.weaponSlots; }
+	
+	set freezeAttack(time) { this.effects.freezeAttack = time; }
+	get freezeAttack() { return this.effects.freezeAttack; }
+	
+	set freezeMovement(time) { this.effects.freezeMovement = time; }
+	get freezeMovement() { return this.effects.freezeMovement; }
+	
+	set invicibility(time) { this.effects.invicibility = time; }
+	get invicibility() { return this.effects.invicibility; }
+	*/
 	
 	addItem({ item, weaponSlotNumber }) {
 		item.owner = this;
 		this.inventory.add(item);
+		item.pickup();
 		
-		this.weaponSlots[weaponSlotNumber].item = item;
-	}
-	
-	update() {
-		super.update();
-		
-		for (const weaponSlot of Object.values(this.weaponSlots)) {
-			if (weaponSlot.cooldown > 0) {
-				weaponSlot.cooldown -= 1;
-			}
+		if (weaponSlotNumber) {
+			this.weaponSlots[weaponSlotNumber].item = item;
 		}
 	}
 	
 	clean() {
-		if (this.status == false) {
+		if (this.status === false) {
 			state.objects.creatures.delete(this);
 		}
 	}
 	
 	render() {
 		state.context.fillStyle = this.color;
-		state.context.fillRect(this.location.x, this.location.y, this.size, this.size);
+		state.context.fillRect(this.location.current.x, this.location.current.y, this.size, this.size);
 	}
 }

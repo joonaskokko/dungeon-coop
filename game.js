@@ -67,21 +67,23 @@ const bindings = {
 state.objects = {};
 state.objects.room = new Room();
 
+state.objects.creatures = new WeakSet();
+state.objects.enemies = new Set();
 state.objects.players = new Set();
-
+state.objects.items = new Set();
 
 
 let player1 = new Player({ x: 220, y: 220, bindings: bindings[1], color: "blue" });
 let player2 = new Player({ x: 420, y: 420, bindings: bindings[2], color: "orange" });
 
-player1.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, speed: 50, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
-player1.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, speed: 20, size: 50}), weaponSlotNumber: 1 });
+player1.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, cooldown: 20, speed: 5, size: 50}), weaponSlotNumber: 1 });
+player1.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, speed: 5, cooldown: 50, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
 
-player2.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, speed: 20, size: 50}), weaponSlotNumber: 1 });
-player2.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, speed: 50, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
+player2.addItem({ item: new MeleeWeapon({ name: "Sword", damage: 10, cooldown: 20, speed: 5, size: 50}), weaponSlotNumber: 1 });
+player2.addItem({ item: new RangedWeapon({ name: "Bow", cost: 10, damage: 50, cooldown: 50, speed: 5, projectileSize: 10, projectileSpeed: 20}), weaponSlotNumber: 2 });
 
-state.objects.players.add(player1);
-state.objects.players.add(player2);
+state.objects.creatures.add(player1);
+state.objects.creatures.add(player2);
 
 state.objects.projectiles = new Set();
 
@@ -102,6 +104,14 @@ let step = function () {
 			
 			for (let player of state.objects.players) {
 				invoke(hook, player);
+			};
+			
+			for (let item of state.objects.items) {
+				invoke(hook, item);
+			};
+			
+			for (let enemy of state.objects.enemies) {
+				invoke(hook, enemy);
 			};
 			
 			for (let projectile of state.objects.projectiles) {
