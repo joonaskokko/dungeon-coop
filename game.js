@@ -20,6 +20,7 @@ import MeleeWeapon from "./meleeweapon.js";
 //import Enemy from "./enemy.js";
 import Room from "./room.js";
 import Projectile from "./projectile.js";
+import Creature from "./creature.js";
 //import Block from "./obstacle.js";
 
 let animate = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
@@ -71,7 +72,6 @@ state.objects.creatures = new WeakSet();
 state.objects.enemies = new Set();
 state.objects.players = new Set();
 state.objects.items = new Set();
-
 
 let player1 = new Player({ x: 220, y: 220, bindings: bindings[1], color: "blue" });
 let player2 = new Player({ x: 420, y: 420, bindings: bindings[2], color: "orange" });

@@ -39,6 +39,11 @@ export default class Thing {
 			immobilized: 0,
 			invicibility: 0
 		};
+		
+		this.sets = {
+			primary: null,
+			secondary: null
+		};
 	}
 	
 	/*
@@ -111,15 +116,15 @@ export default class Thing {
 		// TODO: Proposal system for attacks and health losses.
 		// TODO: Mutator class that acts as target?
 		if (this.effects.immobilized <= 0) {
-			if (this.location.target.x) {
+			if (this.location.target.x !== null) {
 				this.location.current.x = this.location.target.x;
 			}
 		
-			if (this.location.target.y) {
+			if (this.location.target.y !== null) {
 				this.location.current.y = this.location.target.y;
 			}
 
-			if (this.direction.target) {
+			if (this.direction.target !== null) {
 				this.direction.current = this.direction.target;
 			}
 		}
@@ -163,5 +168,9 @@ export default class Thing {
 	
 	destroy() {
 		this.status = false;
+	}
+	
+	checkAbstract() {
+		// TODO: Utility function to prevent spawning abstracts.
 	}
 }
