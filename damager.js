@@ -4,7 +4,7 @@ import Thing from "./thing.js";
 export default class Damager extends Thing {
 	constructor({ damage, duration, size, x, y, owner }) {
 		super();
-		this.location.current = { x, y };
+		this.location = { x, y };
 		this.damage = damage;
 		this.duration = duration;
 		this.size = size;
@@ -13,7 +13,6 @@ export default class Damager extends Thing {
 	}
 	
 	update() {
-		super.update();
 		if (this.duration !== null) {
 			if (this.duration == 0) {
 				this.destroy();
@@ -25,10 +24,13 @@ export default class Damager extends Thing {
 	}
 	
 	render() {
+		// TODO: Do not render at all.
 		super.render();
 	}
 	
 	clean() {
+		super.clean();
+		
 		if (this.status == false) {
 			state.objects.projectiles.delete(this);
 		}

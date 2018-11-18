@@ -18,27 +18,23 @@ export default class RangedWeapon extends Weapon {
 			y: null
 		};
 	
-		if (this.owner.direction.current == "left") {
-			spawnCoordinates.x = this.owner.location.current.x - this.projectileSize;
-			spawnCoordinates.y = this.owner.location.current.y + this.owner.size / 2 - this.projectileSize / 2;
+		if (this.owner.direction == "left") {
+			spawnCoordinates.x = this.owner.location.x - this.projectileSize;
+			spawnCoordinates.y = this.owner.location.y + this.owner.size / 2 - this.projectileSize / 2;
 		}
-		else if (this.owner.direction.current == "right") {
-			spawnCoordinates.x = this.owner.location.current.x + this.owner.size;
-			spawnCoordinates.y = this.owner.location.current.y + this.owner.size / 2 - this.projectileSize / 2;
+		else if (this.owner.direction == "right") {
+			spawnCoordinates.x = this.owner.location.x + this.owner.size;
+			spawnCoordinates.y = this.owner.location.y + this.owner.size / 2 - this.projectileSize / 2;
 		}
-		else if (this.owner.direction.current == "up") {
-			spawnCoordinates.x = this.owner.location.current.x + this.owner.size / 2 - this.projectileSize / 2;
-			spawnCoordinates.y = this.owner.location.current.y - this.projectileSize;
+		else if (this.owner.direction == "up") {
+			spawnCoordinates.x = this.owner.location.x + this.owner.size / 2 - this.projectileSize / 2;
+			spawnCoordinates.y = this.owner.location.y - this.projectileSize;
 		}
-		else if (this.owner.direction.current == "down") {
-			spawnCoordinates.x = this.owner.location.current.x + this.owner.size / 2 - this.projectileSize / 2;
-			spawnCoordinates.y = this.owner.location.current.y + this.owner.size;
+		else if (this.owner.direction == "down") {
+			spawnCoordinates.x = this.owner.location.x + this.owner.size / 2 - this.projectileSize / 2;
+			spawnCoordinates.y = this.owner.location.y + this.owner.size;
 		}
 
-		state.objects.projectiles.add(new Projectile({ x: spawnCoordinates.x, y: spawnCoordinates.y, direction: this.owner.direction.current, duration: null, speed: this.projectileSpeed, size: this.projectileSize, owner: this }));
-	}
-	
-	render() {
-		
+		state.objects.projectiles.add(new Projectile({ x: spawnCoordinates.x, y: spawnCoordinates.y, direction: this.owner.direction, duration: null, speed: this.projectileSpeed, size: this.projectileSize, owner: this }));
 	}
 }

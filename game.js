@@ -20,7 +20,6 @@ import MeleeWeapon from "./meleeweapon.js";
 //import Enemy from "./enemy.js";
 import Room from "./room.js";
 import Projectile from "./projectile.js";
-import Creature from "./creature.js";
 //import Block from "./obstacle.js";
 
 let animate = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
@@ -68,7 +67,7 @@ const bindings = {
 state.objects = {};
 state.objects.room = new Room();
 
-state.objects.creatures = new WeakSet();
+state.objects.creatures = new Set();
 state.objects.enemies = new Set();
 state.objects.players = new Set();
 state.objects.items = new Set();
@@ -89,7 +88,7 @@ state.objects.projectiles = new Set();
 
 state.running = true;
 
-let hooks = [ "clean", "move", "attack", "collide", "update", "prerender", "render" ];
+let hooks = [ "clean", "move", "attack", "updateEffects", "applyPropositions", "update", "render" ];
 
 let invoke = function(function_name, object) {
 	if (typeof object[function_name] === "function") {
@@ -120,11 +119,9 @@ let step = function () {
 		});
 		
 		animate(step);
-		//setTimeout(function() { animate(step) }, 16);
 	}
-	else {
-		// foo
-	}
+	
+	
 };
 
 window.onload = function() {
@@ -139,3 +136,11 @@ window.addEventListener("keydown", function (event) {
 window.addEventListener("keyup", function (event) {
 	delete state.keysDown.delete(event.keyCode);
 });
+
+window.onblur = function(){  
+	state.running = false;  
+}  
+window.onfocus = function(){  
+	state.running = true;
+	animate(step);
+}

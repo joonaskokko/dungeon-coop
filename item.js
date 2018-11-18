@@ -9,7 +9,11 @@ export default class Item extends Thing {
 	}
 	
 	pickup() {
-		this.location.current = { x: null, y: null };
+		if (!this.owner) {
+			throw new Error("Invalid owner.");
+		}
+		
+		this.location = { x: null, y: null };
 	}
 	
 	drop() {
@@ -18,7 +22,7 @@ export default class Item extends Thing {
 	}
 	
 	render() {
-		if (this.owner === 'null' && this.location.current.x && this.location.current.y) {
+		if (this.owner === 'null' && this.owner.location.x && this.owner.location.y) {
 			state.context.fillStyle = this.color;
 			state.context.fillRect(this.location.x, this.location.y, this.size, this.size);
 		}

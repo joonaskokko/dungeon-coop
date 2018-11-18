@@ -4,20 +4,11 @@ import state from "./state.js";
 export default class Thing {
 	constructor() {
 		this.location = {
-			current: {
 				x: null,
 				y: null
-			},
-			target: {
-				x: null,
-				y: null
-			}
 		};
 		
-		this.direction = {
-			current: null,
-			target: null
-		};
+		this.direction = null;
 		
 		this.status = null;
 		this.owner = null;
@@ -44,14 +35,20 @@ export default class Thing {
 			primary: null,
 			secondary: null
 		};
+		
+		this.propositions = {
+			movement: new Set(),
+			attack: new Set(),
+			damage: new Set()
+		};
 	}
 	
 	/*
 	set currentLocation({ x, y }) {
-		this._location.current = { x, y };
+		this._location = { x, y };
 	}
 	
-	get currentLocation() { return this._location.current; }
+	get currentLocation() { return this._location; }
 	
 	set targetLocation({ x, y }) {
 		this._location.target = { x, y };
@@ -72,18 +69,18 @@ export default class Thing {
 	get status() { return this._status; }
 	*/
 
-	location_center() { return { x: this.location.current.x + ( this.size / 2 ), y: this.location.current.y + ( this.size / 2 )}; }
+	location_center() { return { x: this.location.x + ( this.size / 2 ), y: this.location.y + ( this.size / 2 )}; }
 	
 	location_corner(cornernumber) {
 		switch (cornernumber) {
 		case 1:
-			return this.location.current;
+			return this.location;
 		case 2:
-			return { x: this.location.current.x, y: this.location.current.y + this.size };
+			return { x: this.location.x, y: this.location.y + this.size };
 		case 3:
-			return { x: this.location.current.x + this.size, y: this.location.current.y + this.size };
+			return { x: this.location.x + this.size, y: this.location.y + this.size };
 		case 4:
-			return { x: this.location.current.x, y: this.location.current.y + this.size };
+			return { x: this.location.x, y: this.location.y + this.size };
 		}
 	}
 	
@@ -111,59 +108,63 @@ export default class Thing {
 		return location;
 	}
 	
-	update() {
-		// TODO: Move towards target location.
-		// TODO: Proposal system for attacks and health losses.
-		// TODO: Mutator class that acts as target?
-		if (this.effects.immobilized <= 0) {
-			if (this.location.target.x !== null) {
-				this.location.current.x = this.location.target.x;
+	updateEffects() {
+		for (const [name, value] of Object.entries(this.effects)) {
+			// FIXME: Broken
+			if (value > 0) {
+				this.effects[name] -= 1;
 			}
-		
-			if (this.location.target.y !== null) {
-				this.location.current.y = this.location.target.y;
-			}
-
-			if (this.direction.target !== null) {
-				this.direction.current = this.direction.target;
-			}
-		}
-		else {
-			this.effects.immobilized -= 1;
-		}
-		
-		if (this.effects.freezeMeleeAttack <= 0) {
-			// :D
-		}
-		else {
-			this.effects.freezeMeleeAttack -= 1;
-		}
-		
-		if (!this.effects.freezeRangedAttack) {
-			// :D
-		}
-		else {
-			this.effects.freezeRangedAttack -= 1;
-		}
-		
-		this.location.target = { x: null, y: null };
-		this.direction.target = null;
-		
-		// FIXME
-		if (this.location.current.x > 1000 || this.location.current.y > 1000 || this.location.current.x < 0 || this.location.current.y < 0) {
-			this.destroy();
 		}
 	}
 	
-	mutate(mutator) {
-		for (let key of Object.keys(mutator)) {
-		  this[key] = mutator[key]
+	applyPropositions() {
+		// TODO: FIXME.
+		for (const proposition of this.propositions.movement) {
+			proposition.validate();
+		
+			if (proposition.accepted == true) {
+				proposition.apply();
+			}
+		
+			this.propositions.movement.delete(proposition);
 		}
+		
+		for (const proposition of this.propositions.attack) {
+			proposition.validate();
+		
+			if (proposition.accepted == true) {
+				proposition.apply();
+			}
+		
+			this.propositions.attack.delete(proposition);
+		}
+		
+	}
+	
+	collidesWith(object) {
+		if (object === this) {
+			return false;
+		}
+		
+		/*
+		if (((object.location.x >= this.location.x || object.location.x + object.size >= this.location.x) && object.location.x <= this.location.x + this.size)
+			&& ((object.location.y >= this.location.y || object.location.y + object.size >= this.location.y) && object.location.y <= this.location.y + this.size)) {
+				return true;
+		}*/
+		if ((Math.abs(this.location.x - object.location.x) * 2 < (this.size + object.size)) && (Math.abs(this.location.y - object.location.y) * 2 < (this.size + object.size))) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	mutate(mutator) {
+		Object.assign(this, {...mutator});
 	}
 	
 	render() {
 		state.context.fillStyle = this.color;
-		state.context.fillRect(this.location.current.x, this.location.current.y, this.size, this.size);
+		state.context.fillRect(this.location.x, this.location.y, this.size, this.size);
 	}
 	
 	destroy() {
@@ -172,5 +173,13 @@ export default class Thing {
 	
 	checkAbstract() {
 		// TODO: Utility function to prevent spawning abstracts.
+	}
+	
+	clean() {
+		this.propositions = {
+			movement: new Set(),
+			attack: new Set(),
+			damage: new Set()
+		};
 	}
 }

@@ -8,8 +8,8 @@ export default class Creature extends Thing {
 		this.size = 50;
 		this.color = "green";
 		
-		this.location.current = { x, y };
-		this.direction.current = "up";
+		this.location = { x, y };
+		this.direction = "up";
 		
 		this.health = {
 			current: 1,
@@ -23,32 +23,10 @@ export default class Creature extends Thing {
 		};
 		
 		this.weaponSlots = {
-			1: {
-				item: null,
-				cooldown: 0
-			},
-			2: {
-				item: null,
-				cooldown: 0
-			}
+			1: null,
+			2: null,
 		};
 	}
-	
-	/*
-	get inventory() { return this.inventory; }
-	
-	set equipWeapon(weaponSlotNumber, item) { this.weaponSlots[weaponSlotNumber].item = item; }
-	get weaponSlots() { return this.weaponSlots; }
-	
-	set freezeAttack(time) { this.effects.freezeAttack = time; }
-	get freezeAttack() { return this.effects.freezeAttack; }
-	
-	set freezeMovement(time) { this.effects.freezeMovement = time; }
-	get freezeMovement() { return this.effects.freezeMovement; }
-	
-	set invicibility(time) { this.effects.invicibility = time; }
-	get invicibility() { return this.effects.invicibility; }
-	*/
 	
 	addItem({ item, weaponSlotNumber }) {
 		item.owner = this;
@@ -56,18 +34,29 @@ export default class Creature extends Thing {
 		item.pickup();
 		
 		if (weaponSlotNumber) {
-			this.weaponSlots[weaponSlotNumber].item = item;
+			this.equip({ item, weaponSlotNumber });
 		}
+	}
+	
+	dropItem({}) {
+		// TODO: Remove from inventory and call item.drop().
+	}
+	
+	equip({ item, weaponSlotNumber }) {
+		if (this.weaponSlots[weaponSlotNumber] == null) {
+			this.weaponSlots[weaponSlotNumber] = item;
+		}
+	}
+	
+	unequip({ weaponSlotNumber }) {
+		this.weaponSlots[weaponSlotNumber] = null;
 	}
 	
 	clean() {
+		super.clean();
+		
 		if (this.status === false) {
 			state.objects.creatures.delete(this);
 		}
-	}
-	
-	render() {
-		state.context.fillStyle = this.color;
-		state.context.fillRect(this.location.current.x, this.location.current.y, this.size, this.size);
-	}
+	}	
 }

@@ -12,7 +12,6 @@ export default class MeleeWeapon extends Weapon {
 	
 	attack() {
 		super.attack();
-
 		this.owner.effects.freezeMeleeAttack = this.cooldown;
 		
 		let spawnCoordinates = {
@@ -20,21 +19,21 @@ export default class MeleeWeapon extends Weapon {
 			y: null
 		};
 	
-		if (this.owner.direction.current == "left") {
-			spawnCoordinates.x = this.owner.location.current.x - this.size;
-			spawnCoordinates.y = this.owner.location.current.y + this.owner.size / 2 - this.size / 2;
+		if (this.owner.direction == "left") {
+			spawnCoordinates.x = this.owner.location.x - this.size;
+			spawnCoordinates.y = this.owner.location.y + this.owner.size / 2 - this.size / 2;
 		}
-		else if (this.owner.direction.current == "right") {
-			spawnCoordinates.x = this.owner.location.current.x + this.owner.size;
-			spawnCoordinates.y = this.owner.location.current.y + this.owner.size / 2 - this.size / 2;
+		else if (this.owner.direction == "right") {
+			spawnCoordinates.x = this.owner.location.x + this.owner.size;
+			spawnCoordinates.y = this.owner.location.y + this.owner.size / 2 - this.size / 2;
 		}
-		else if (this.owner.direction.current == "up") {
-			spawnCoordinates.x = this.owner.location.current.x + this.owner.size / 2 - this.size / 2;
-			spawnCoordinates.y = this.owner.location.current.y - this.size;
+		else if (this.owner.direction == "up") {
+			spawnCoordinates.x = this.owner.location.x + this.owner.size / 2 - this.size / 2;
+			spawnCoordinates.y = this.owner.location.y - this.size;
 		}
-		else if (this.owner.direction.current == "down") {
-			spawnCoordinates.x = this.owner.location.current.x + this.owner.size / 2 - this.size / 2;
-			spawnCoordinates.y = this.owner.location.current.y + this.owner.size;
+		else if (this.owner.direction == "down") {
+			spawnCoordinates.x = this.owner.location.x + this.owner.size / 2 - this.size / 2;
+			spawnCoordinates.y = this.owner.location.y + this.owner.size;
 		}
 
 		state.objects.projectiles.add(new Damager({damage: this.damage, size: this.size, duration: this.speed, x: spawnCoordinates.x, y: spawnCoordinates.y, owner: this.owner }));

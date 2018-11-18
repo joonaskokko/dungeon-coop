@@ -1,39 +1,43 @@
 import state from "./state.js";
 import Projectile from "./projectile.js";
 import Creature from "./creature.js";
+import MovementProposition from "./movementproposition.js";
+import AttackProposition from "./attackproposition.js";
 
 export default class Player extends Creature {
 	constructor({ x, y, bindings, color }) {
 		super({ x, y });
-		
 		this.color = color;
 		
 		this.bindings = bindings;
-		
 		state.objects.players.add(this);
 	}
 	
 	move() {
+		// TODO: Maybe add movement commands to Thing?
+		let direction = null;
+		
 		if (state.keysDown.has(this.bindings.leftkey)) {
-			this.direction.target = "left";
-			this.location.target.x = this.location.current.x - this.speed.current;
+			direction = "left";
 		}
 		else if (state.keysDown.has(this.bindings.rightkey)) {
-			this.direction.target = "right";
-			this.location.target.x = this.location.current.x + this.speed.current;
+			direction = "right";
 		}
 		else if (state.keysDown.has(this.bindings.upkey)) {
-			this.direction.target = "up";
-			this.location.target.y = this.location.current.y - this.speed.current;
+			direction = "up";
 		}
 		else if (state.keysDown.has(this.bindings.downkey)) {
-			this.direction.target = "down";
-			this.location.target.y = this.location.current.y + this.speed.current;
+			direction = "down";
+		}
+		
+		if (direction) {
+			this.propositions.movement.add(new MovementProposition({ direction, object: this }))
 		}
 	}
 	
 	clean() {
 		super.clean();
+		
 		if (this.status === false) {
 			state.objects.players.delete(this);
 		}
@@ -41,15 +45,10 @@ export default class Player extends Creature {
 	
 	attack() {
 		for (const [ slotNumber, weaponSlot ] of Object.entries(this.weaponSlots)) {
-			if (weaponSlot.item) {
-				if (slotNumber == 1 && state.keysDown.has(this.bindings.attack1key) && this.effects.freezeMeleeAttack == 0) {
-					weaponSlot.item.attack();
-					state.keysDown.delete(this.bindings.attack1key);
-				}
-				else if (slotNumber == 2 && state.keysDown.has(this.bindings.attack2key) && this.effects.freezeRangedAttack == 0) {
-					weaponSlot.item.attack();
-					state.keysDown.delete(this.bindings.attack2key);
-				}
+			if ((slotNumber == 1 && state.keysDown.has(this.bindings.attack1key) || (slotNumber == 2 && state.keysDown.has(this.bindings.attack2key)))) {
+				this.propositions.attack.add(new AttackProposition({ direction: this.direction, weaponSlot, object: this }));
+				state.keysDown.delete(this.bindings.attack1key);
+				state.keysDown.delete(this.bindings.attack2key);
 			}
 		}
 	}
