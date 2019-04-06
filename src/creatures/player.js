@@ -1,4 +1,5 @@
 import state from "./state.js";
+import assets from "./assets.js";
 import Projectile from "./projectile.js";
 import Creature from "./creature.js";
 import MovementProposition from "./movementproposition.js";
@@ -31,7 +32,7 @@ export default class Player extends Creature {
 		}
 		
 		if (direction) {
-			this.propositions.movement.add(new MovementProposition({ direction, object: this }))
+			this.propositions.movement.add(new MovementProposition({ direction, object: this }));
 		}
 	}
 	
@@ -51,5 +52,10 @@ export default class Player extends Creature {
 				state.keysDown.delete(this.bindings.attack2key);
 			}
 		}
+	}
+	
+	render() {
+		this.asset = assets.player.sprite;
+		state.context.drawImage(this.asset.image, 0, 0, 100, 100, this.location.x, this.location.y, 100, 100);
 	}
 }

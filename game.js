@@ -13,23 +13,34 @@ thing:
 */
 
 import state from "./state.js";
+import assets from "./assets.js";
 
 import Player from "./player.js";
 import RangedWeapon from "./rangedweapon.js";
 import MeleeWeapon from "./meleeweapon.js";
-//import Enemy from "./enemy.js";
+
+import Level from "./level.js";
 import Room from "./room.js";
 import Projectile from "./projectile.js";
-//import Block from "./obstacle.js";
+
+import CanvasRenderer from "./renderer/canvasrenderer.js";
+
+// Load player asset.
+// TODO: Make more sense to this.
+new Promise(function(resolve, reject) {
+	let image = new Image();
+	
+	image.src = assets.player.sprite.src;
+	image.onload = resolve;
+	
+	assets.player.sprite.image = image;
+}).then(function() { state.running = true; });
 
 let animate = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
 	window.setTimeout(callback, 1000 / 60)
 };
 
-state.canvas = document.createElement("canvas");
-state.canvas.width = 1000;
-state.canvas.height = 1000;
-state.context = state.canvas.getContext("2d");
+let renderer = new CanvasRenderer();
 
 const bindings = {
 	/*
@@ -64,8 +75,11 @@ const bindings = {
 	}
 };
 
+state.level = new Level();
+state.level.generateRooms();
+state.currentRoom = state.level.startingRoom;
+
 state.objects = {};
-state.objects.room = new Room();
 
 state.objects.creatures = new Set();
 state.objects.enemies = new Set();
@@ -86,9 +100,7 @@ state.objects.creatures.add(player2);
 
 state.objects.projectiles = new Set();
 
-state.running = true;
-
-let hooks = [ "clean", "move", "attack", "updateEffects", "applyPropositions", "update", "render" ];
+let hooks = [ "clean", "move", "attack", "updateEffects", "applyPropositions" ];
 
 let invoke = function(function_name, object) {
 	if (typeof object[function_name] === "function") {
@@ -118,10 +130,10 @@ let step = function () {
 			}
 		});
 		
+		
+		
 		animate(step);
 	}
-	
-	
 };
 
 window.onload = function() {

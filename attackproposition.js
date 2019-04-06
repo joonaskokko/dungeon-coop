@@ -23,7 +23,6 @@ export default class AttackProposition extends Proposition {
 			return;
 		}
 		
-		
 		if (this.weaponSlot == null) {
 			this.accepted = false;
 			return;

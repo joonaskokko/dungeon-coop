@@ -69,9 +69,9 @@ export default class Thing {
 	get status() { return this._status; }
 	*/
 
-	location_center() { return { x: this.location.x + ( this.size / 2 ), y: this.location.y + ( this.size / 2 )}; }
+	get locationCenter() { return { x: this.location.x + ( this.size / 2 ), y: this.location.y + ( this.size / 2 )}; }
 	
-	location_corner(cornernumber) {
+	get locationCorner(cornernumber) {
 		switch (cornernumber) {
 		case 1:
 			return this.location;
@@ -84,7 +84,7 @@ export default class Thing {
 		}
 	}
 	
-	getSide(sidenumber) {
+	get getSide(sidenumber) {
 		let location = null;
 		let halfsize = this.size / 2;
 		
@@ -110,7 +110,6 @@ export default class Thing {
 	
 	updateEffects() {
 		for (const [name, value] of Object.entries(this.effects)) {
-			// FIXME: Broken
 			if (value > 0) {
 				this.effects[name] -= 1;
 			}
@@ -141,16 +140,7 @@ export default class Thing {
 		
 	}
 	
-	collidesWith(object) {
-		if (object === this) {
-			return false;
-		}
-		
-		/*
-		if (((object.location.x >= this.location.x || object.location.x + object.size >= this.location.x) && object.location.x <= this.location.x + this.size)
-			&& ((object.location.y >= this.location.y || object.location.y + object.size >= this.location.y) && object.location.y <= this.location.y + this.size)) {
-				return true;
-		}*/
+	collide() {
 		if ((Math.abs(this.location.x - object.location.x) * 2 < (this.size + object.size)) && (Math.abs(this.location.y - object.location.y) * 2 < (this.size + object.size))) {
 			return true;
 		}
