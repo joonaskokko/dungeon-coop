@@ -1,9 +1,7 @@
-import state from "./state.js";
-import assets from "./assets.js";
-import Projectile from "./projectile.js";
+import state from "./../../state.js";
+import assets from "./../../assets/assets.js";
+import Projectile from "./../effects/projectile.js";
 import Creature from "./creature.js";
-import MovementProposition from "./movementproposition.js";
-import AttackProposition from "./attackproposition.js";
 
 export default class Player extends Creature {
 	constructor({ x, y, bindings, color }) {

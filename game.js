@@ -11,19 +11,18 @@ thing:
 	item
 		weapon
 */
-
 import state from "./state.js";
-import assets from "./assets.js";
+import assets from "./assets/assets.js";
 
-import Player from "./creatures/player.js";
-import RangedWeapon from "./items/rangedweapon.js";
-import MeleeWeapon from "./items/meleeweapon.js";
+import Player from "./src/creatures/player.js";
+import RangedWeapon from "./src/items/rangedweapon.js";
+import MeleeWeapon from "./src/items/meleeweapon.js";
 
-import Level from "./map/level.js";
-import Room from "./map/room.js";
-import Projectile from "./projectile.js";
+import Level from "./src/map/level.js";
+import Room from "./src/map/room.js";
+import Projectile from "./src/effects/projectile.js";
 
-import CanvasRenderer from "./renderer/canvasrenderer.js";
+import CanvasRenderer from "./src/renderer/canvasrenderer.js";
 
 // Load player asset.
 // TODO: Make more sense to this.

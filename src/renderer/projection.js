@@ -24,7 +24,10 @@ export default class Projection {
 	}
 	
 	nextFrame() {
+		// TODO: Change sprite frame.
 		
+		// Reset duration.
+		this.duration = 0;
 	}
 	
 	clean() {

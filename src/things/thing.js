@@ -41,6 +41,12 @@ export default class Thing {
 			attack: new Set(),
 			damage: new Set()
 		};
+		
+		state.events.on("move", function(target, location) {
+			if (target !== this) {
+				
+			}
+		});
 	}
 	
 	/*
@@ -171,5 +177,9 @@ export default class Thing {
 			attack: new Set(),
 			damage: new Set()
 		};
+	}
+	
+	emit(event, target, parameters) {
+		state.events.emit(event, target, parameters);
 	}
 }
