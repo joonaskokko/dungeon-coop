@@ -15,12 +15,12 @@ thing:
 import state from "./state.js";
 import assets from "./assets.js";
 
-import Player from "./player.js";
-import RangedWeapon from "./rangedweapon.js";
-import MeleeWeapon from "./meleeweapon.js";
+import Player from "./creatures/player.js";
+import RangedWeapon from "./items/rangedweapon.js";
+import MeleeWeapon from "./items/meleeweapon.js";
 
-import Level from "./level.js";
-import Room from "./room.js";
+import Level from "./map/level.js";
+import Room from "./map/room.js";
 import Projectile from "./projectile.js";
 
 import CanvasRenderer from "./renderer/canvasrenderer.js";
